@@ -1,9 +1,7 @@
 // Debate API Service
 
 import { toast } from "sonner";
-
-// Base URL for API calls
-const API_BASE_URL = "http://127.0.0.1:8000";
+import { API_BASE_URL } from "../config/env";
 
 // API error handler
 const handleApiError = (error: any) => {
