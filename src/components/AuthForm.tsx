@@ -6,7 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const AuthForm: React.FC = () => {
+interface AuthFormProps {
+  type?: "login" | "register";
+  onClose?: () => void;
+}
+
+const AuthForm: React.FC<AuthFormProps> = ({ type = "login", onClose }) => {
   const [username, setUsername] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login, register } = useAuth();
@@ -18,6 +23,7 @@ const AuthForm: React.FC = () => {
     setIsSubmitting(true);
     await login(username.trim());
     setIsSubmitting(false);
+    if (onClose) onClose();
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -27,6 +33,7 @@ const AuthForm: React.FC = () => {
     setIsSubmitting(true);
     await register(username.trim());
     setIsSubmitting(false);
+    if (onClose) onClose();
   };
 
   return (
@@ -37,7 +44,7 @@ const AuthForm: React.FC = () => {
           Join intellectual battles on various topics
         </CardDescription>
       </CardHeader>
-      <Tabs defaultValue="login" className="w-full">
+      <Tabs defaultValue={type} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login">Login</TabsTrigger>
           <TabsTrigger value="register">Register</TabsTrigger>
