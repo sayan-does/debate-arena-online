@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { api, PlayerStats } from "@/services/api";
-import PlayerStats from "@/components/PlayerStats";
+import { api, PlayerStats as PlayerStatsType } from "@/services/api";
+import PlayerStatsComponent from "@/components/PlayerStats";
 import JoinRoom from "@/components/JoinRoom";
 import DebateHistory from "@/components/DebateHistory";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ const Dashboard: React.FC = () => {
   const { currentUser, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
-  const [playerStats, setPlayerStats] = useState<PlayerStats | null>(null);
+  const [playerStats, setPlayerStats] = useState<PlayerStatsType | null>(null);
   const [loading, setLoading] = useState(true);
   
   // If not authenticated, redirect to landing
@@ -94,7 +94,7 @@ const Dashboard: React.FC = () => {
             </div>
           ) : (
             <>
-              {playerStats && <PlayerStats player={playerStats.player} />}
+              {playerStats && <PlayerStatsComponent player={playerStats.player} />}
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>

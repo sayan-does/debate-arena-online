@@ -1,100 +1,93 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import AuthForm from "@/components/AuthForm";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Brain, Shield, Zap } from "lucide-react";
+import { Brain, ArrowRight, UserPlus } from "lucide-react";
 
 const Landing: React.FC = () => {
+  const [showAuthForm, setShowAuthForm] = useState(false);
+  const [authType, setAuthType] = useState<"login" | "register">("login");
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  
+
   // If already authenticated, redirect to dashboard
   React.useEffect(() => {
     if (isAuthenticated) {
       navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
-  
+
+  const handleShowLogin = () => {
+    setAuthType("login");
+    setShowAuthForm(true);
+  };
+
+  const handleShowRegister = () => {
+    setAuthType("register");
+    setShowAuthForm(true);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <Brain className="h-8 w-8 text-debate-navy" />
+            <Brain className="h-7 w-7 text-debate-navy" />
             <span className="font-heading text-xl font-bold">Debate Arena</span>
           </div>
-          {isAuthenticated && (
-            <Button onClick={() => navigate("/dashboard")} className="debate-button-primary">
-              Go to Dashboard
+          <div className="space-x-2">
+            <Button variant="ghost" size="sm" onClick={handleShowLogin}>
+              Login
             </Button>
-          )}
+            <Button size="sm" onClick={handleShowRegister}>
+              Sign Up
+            </Button>
+          </div>
         </div>
       </header>
-      
+
       <main className="flex-1">
-        <section className="py-16 md:py-24">
-          <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-8 md:mb-0 md:pr-8">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 font-heading tracking-tight">
-                Challenge Your <span className="text-debate-navy">Intellect</span>, Sharpen Your <span className="text-debate-red">Arguments</span>
+        <div className="container mx-auto px-4 py-12 md:py-24">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="md:w-1/2 space-y-6">
+              <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+                Sharpen Your Mind Through Structured Debates
               </h1>
-              <p className="text-lg mb-6">
-                Join Debate Arena and engage in structured debates on various topics. 
-                Test your reasoning, improve your persuasion skills, and climb the rankings.
+              <p className="text-lg text-muted-foreground">
+                Join intellectual battles on various topics. Create or join debate rooms, 
+                present your arguments, and improve your persuasion skills.
               </p>
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <Shield className="h-6 w-6 text-debate-navy shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-medium">Structured Format</h3>
-                    <p className="text-muted-foreground">
-                      Five rounds of carefully evaluated arguments with fair scoring
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <Zap className="h-6 w-6 text-debate-red shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-medium">Diverse Topics</h3>
-                    <p className="text-muted-foreground">
-                      Debate on sports, philosophy, cinema, music, geopolitics and more
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <Users className="h-6 w-6 text-debate-navy shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-medium">Competitive Rankings</h3>
-                    <p className="text-muted-foreground">
-                      Track your progress, improve your skills, and climb the leaderboard
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="hidden md:block mt-8">
-                <Button 
-                  onClick={() => document.getElementById("auth-section")?.scrollIntoView({ behavior: "smooth" })}
-                  className="debate-button-primary"
-                >
-                  Get Started <ArrowRight size={16} className="ml-2" />
+              <div className="flex space-x-4">
+                <Button size="lg" onClick={handleShowRegister} className="debate-button-primary">
+                  <UserPlus className="mr-2 h-5 w-5" />
+                  Get Started
+                </Button>
+                <Button variant="outline" size="lg" onClick={handleShowLogin}>
+                  <ArrowRight className="mr-2 h-5 w-5" />
+                  I Already Have an Account
                 </Button>
               </div>
             </div>
             <div className="md:w-1/2">
-              <div 
-                id="auth-section" 
-                className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 md:ml-auto"
-              >
-                <AuthForm />
-              </div>
+              {showAuthForm ? (
+                <AuthForm type={authType} onClose={() => setShowAuthForm(false)} />
+              ) : (
+                <div className="bg-muted rounded-lg p-8 text-center">
+                  <Brain className="h-16 w-16 mx-auto mb-4 text-debate-navy" />
+                  <h2 className="text-2xl font-bold mb-2">Welcome to Debate Arena</h2>
+                  <p className="text-muted-foreground">
+                    Login or create an account to start debating
+                  </p>
+                </div>
+              )}
             </div>
           </div>
-        </section>
+        </div>
       </main>
-      
-      <footer className="bg-gray-100 py-6">
+
+      <footer className="bg-gray-100 py-4">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>© {new Date().getFullYear()} Debate Arena. All rights reserved.</p>
         </div>
